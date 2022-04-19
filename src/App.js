@@ -99,10 +99,15 @@ export default App;
 
 const Content = ({ quoteData, onClickHandler }) => {
   return (
-    <div id="wrapper" className="d-flex flex-column justify-content-center">
-      <DynamicStyles quoteData={quoteData} />
-      <Title />
-      <QuoteBox quote={quoteData.quoteShowen} onClickHandler={onClickHandler} />
+    <div id="wrapper" className="container" style={{ paddingTop: 200 }}>
+      <div className="card text-center w-60 mx-auto">
+        <Title />
+        <div id="quote-box" className="card-body">
+          <DynamicStyles quoteData={quoteData} />
+          <QuoteBox quote={quoteData.quoteShowen} />
+          <Buttons onClickHandler={onClickHandler} />
+        </div>
+      </div>
     </div>
   );
 };
@@ -124,37 +129,34 @@ const DynamicStyles = ({ quoteData }) => (
 );
 
 const Title = () => (
-  <div id="title">
-    <h1 className="text-center" style={{ color: "#fff" }}>
-      Random Quote Machine
-    </h1>
+  <div id="title" className="card-header">
+    <h1>Random Quote Machine</h1>
   </div>
 );
 
 const QuoteBox = ({ quote, onClickHandler, onCheckHandler, autoChecked }) => {
   return (
-    <div id="quote-box" className="w-75">
+    <div className="card-text">
       <QuoteText quote={quote} />
       <QuoteAuthor author={quote.author}></QuoteAuthor>
-      <Buttons onClickHandler={onClickHandler} />
     </div>
   );
 };
 
 const QuoteText = ({ quote }) => (
-  <div id="quote-text">
-    <h2 className="text-sm-center">{quote.quote}</h2>
+  <div id="text">
+    <h2>{quote.quote}</h2>
   </div>
 );
 
 const QuoteAuthor = ({ author }) => (
-  <div id="quote-author">
+  <div id="author">
     <h5 className="text-sm-end fst-italic">{author}</h5>
   </div>
 );
 
 const Buttons = ({ onClickHandler }) => (
-  <div className="d-flex justify-content-between pt-5">
+  <div className="d-flex justify-content-between">
     <div>
       <a
         href="https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text="
