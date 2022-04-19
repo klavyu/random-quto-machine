@@ -20,18 +20,6 @@ function App() {
   const [quoteData, setQuoteData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [autoShow, setAutoShow] = useState(false);
-
-  if (autoShow) {
-    setTimeout(() => {
-      setQuoteData((prevState) => {
-        return {
-          ...prevState,
-          quoteShowen: getRandomQuote(),
-        };
-      });
-    }, 2000);
-  }
 
   const getData = useCallback(async () => {
     setIsLoading(true);
@@ -80,14 +68,6 @@ function App() {
         colorChosen: getRandomColor(),
       };
     });
-    // setAutoShow(!autoShow);
-  };
-
-  const handleAutoCheckChange = (e) => {
-    console.log(e.target.checked);
-    setAutoShow((prevState) => {
-      return !prevState.autoShow;
-    });
   };
 
   const getRandomQuote = () => {
@@ -101,96 +81,96 @@ function App() {
   };
 
   if (error) {
+    console.log(error);
   }
-  console.log(quoteData);
-  return !isLoading && quoteData && !error && newFunction_4();
-
-  function newFunction_4() {
-    return (
-      <div id="wrapper" className="d-flex flex-column justify-content-center">
-        {newFunction_3(quoteData)}
-        {newFunction_2()}
-        <QuoteBox
-          quote={quoteData.quoteShowen}
-          onClickHandler={handleNewQuoteClickHandler}
-          onCheckHandler={handleAutoCheckChange}
-          autoChecked={autoShow}
-        />
-      </div>
-    );
-  }
-
-  function newFunction_2() {
-    return (
-      <div id="title">
-        <h1 className="text-center" style={{ color: "#fff" }}>
-          Random Quote Machine
-        </h1>
-      </div>
-    );
-  }
+  return (
+    !isLoading &&
+    quoteData &&
+    !error && (
+      <Content
+        quoteData={quoteData}
+        onClickHandler={handleNewQuoteClickHandler}
+      />
+    )
+  );
 }
 
 export default App;
 
-const QuoteBox = ({ quote, onClickHandler, onCheckHandler, autoChecked }) => {
+const Content = ({ quoteData, onClickHandler }) => {
   return (
-    <div id="quote-box" className="w-75">
-      {newFunction(quote)}
-      <div id="quote-author">
-        <h5 className="text-sm-end fst-italic">{quote.author}</h5>
-      </div>
-
-      {newFunction_1(onClickHandler)}
+    <div id="wrapper" className="d-flex flex-column justify-content-center">
+      <DynamicStyles quoteData={quoteData} />
+      <Title />
+      <QuoteBox quote={quoteData.quoteShowen} onClickHandler={onClickHandler} />
     </div>
   );
 };
-function newFunction_3(quoteData) {
-  return (
-    <style>
-      {"body {background-color: " +
-        quoteData.colorChosen +
-        "; color: " +
-        quoteData.colorChosen +
-        ";} button {background-color: " +
-        quoteData.colorChosen +
-        "!important; color: #fff!important;} a {color: " +
-        quoteData.colorChosen +
-        ";} button:hover {opacity: 0.5;} a:hover {color: " +
-        quoteData.colorChosen +
-        ";opacity: 0.5;}"}
-    </style>
-  );
-}
 
-function newFunction_1(onClickHandler) {
+const DynamicStyles = ({ quoteData }) => (
+  <style>
+    {"body {background-color: " +
+      quoteData.colorChosen +
+      "; color: " +
+      quoteData.colorChosen +
+      ";} button {background-color: " +
+      quoteData.colorChosen +
+      "!important; color: #fff!important;} a {color: " +
+      quoteData.colorChosen +
+      ";} button:hover {opacity: 0.5;} a:hover {color: " +
+      quoteData.colorChosen +
+      ";opacity: 0.5;}"}
+  </style>
+);
+
+const Title = () => (
+  <div id="title">
+    <h1 className="text-center" style={{ color: "#fff" }}>
+      Random Quote Machine
+    </h1>
+  </div>
+);
+
+const QuoteBox = ({ quote, onClickHandler, onCheckHandler, autoChecked }) => {
   return (
-    <div className="d-flex justify-content-between pt-5">
-      <div>
-        <a
-          href="https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text="
-          id="tweet-quote"
-          target="_top"
-          className="m-3"
-        >
-          <span>
-            <i className="fa fa-twitter"></i>Tweet this!
-          </span>
-        </a>
-      </div>
-      <div>
-        <button id="new-quote" className="btn " onClick={onClickHandler}>
-          New Quote
-        </button>
-      </div>
+    <div id="quote-box" className="w-75">
+      <QuoteText quote={quote} />
+      <QuoteAuthor author={quote.author}></QuoteAuthor>
+      <Buttons onClickHandler={onClickHandler} />
     </div>
   );
-}
+};
 
-function newFunction(quote) {
-  return (
-    <div id="quote-text">
-      <h2 className="text-sm-center">{quote.quote}</h2>
+const QuoteText = ({ quote }) => (
+  <div id="quote-text">
+    <h2 className="text-sm-center">{quote.quote}</h2>
+  </div>
+);
+
+const QuoteAuthor = ({ author }) => (
+  <div id="quote-author">
+    <h5 className="text-sm-end fst-italic">{author}</h5>
+  </div>
+);
+
+const Buttons = ({ onClickHandler }) => (
+  <div className="d-flex justify-content-between pt-5">
+    <div>
+      <a
+        href="https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text="
+        id="tweet-quote"
+        target="_top"
+        className="m-3"
+      >
+        <span>
+          <i className="fa fa-twitter"></i>Tweet this!
+        </span>
+      </a>
     </div>
-  );
-}
+    <div>
+      <button id="new-quote" className="btn " onClick={onClickHandler}>
+        New Quote
+      </button>
+    </div>
+  </div>
+);
